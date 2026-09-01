@@ -17,10 +17,10 @@ Source integration for the T8020 Apple TV jailbreak boot chain.
 
 | Component | Input | Output |
 | --- | --- | --- |
-| [usbliter8](https://github.com/burnegg/usbliter8) | SecureROM DFU | PWND DFU with the iBoot trampoline preserved |
-| [yoloDFU](https://github.com/burnegg/yolodfu) | Patched iBoot trampoline | EL1 DFU runtime and Pongo loader container |
-| [PongoOS](https://github.com/burnegg/PongoOS) | Pongo loader container | Patched XNU handoff |
-| [jbinit](https://github.com/burnegg/jbinit) | Patched XNU | Rootless userspace bootstrap |
+| [usbliter8](https://github.com/Fauxly/usbliter8) | SecureROM DFU | PWND DFU with the iBoot trampoline preserved |
+| [yoloDFU](https://github.com/Fauxly/yolodfu) | Patched iBoot trampoline | EL1 DFU runtime and Pongo loader container |
+| [PongoOS](https://github.com/Fauxly/PongoOS) | Pongo loader container | Patched XNU handoff |
+| [jbinit](https://github.com/Fauxly/jbinit) | Patched XNU | Rootless userspace bootstrap |
 
 The component gitlinks and `components.lock.json` pin the source revisions used
 by the tested chain.
@@ -28,7 +28,7 @@ by the tested chain.
 ## Clone
 
 ```sh
-git clone --recurse-submodules https://github.com/burnegg/atv2nd-jailbreak.git
+git clone --recurse-submodules https://github.com/Fauxly/atv2nd-jailbreak.git
 cd atv2nd-jailbreak
 make verify
 ```
@@ -127,7 +127,7 @@ make build-usbliter8 PICO_SDK_PATH=/path/to/pico-sdk
 ```
 
 Flash `components/usbliter8/build/usbliter8.uf2` to the RP2350 and use the
-procedure documented by the [usbliter8 repository](https://github.com/burnegg/usbliter8)
+procedure documented by the [usbliter8 repository](https://github.com/Fauxly/usbliter8)
 to place the Apple TV in pwned DFU. Reconnect the pwned device to the host.
 
 ## Boot from pwned DFU
