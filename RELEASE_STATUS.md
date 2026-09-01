@@ -19,8 +19,10 @@ the release hash boundary.
 
 ## yoloDFU
 
-The patched iBSS was built from input SHA-256
-`c8d4aebc681d38a8925f3b86d0fa54cac23c39d525e53f088fd21c8045dc8f4d`.
+The patched iBSS accepts input SHA-256
+`c8d4aebc681d38a8925f3b86d0fa54cac23c39d525e53f088fd21c8045dc8f4d` (tvOS 26.5)
+or `44b8df7038b23b1bda0e7d47a295c9e0cfdbf5c4aa414405d4f30855a6fbc0e8` (tvOS 26.6).
+All patch site VAs are identical across both inputs.
 The Pongo container was built from the Pongo image recorded below.
 
 | Output | Size | SHA-256 |
@@ -39,10 +41,11 @@ pre-publication artifacts.
 ## PongoOS and KPF
 
 Built with `PONGO_SRAM_BASE=0x19c000000`. Static KPF tests used complete
-fileset kernel payloads for tvOS 26.3 and 26.5. Both completed successfully.
+fileset kernel payloads for tvOS 26.3, 26.5, and 26.6. All completed successfully.
 Their SHA-256 values are
-`1424450974769bc50301401e82cf146acaeb21693ec03e4a3966ebb0f93c04f0`
-and `c04e5909c99d50cfc47aeb0e6159e1c866c32893accbaf30d70418cdd0b62d5c`.
+`1424450974769bc50301401e82cf146acaeb21693ec03e4a3966ebb0f93c04f0` (26.3),
+`c04e5909c99d50cfc47aeb0e6159e1c866c32893accbaf30d70418cdd0b62d5c` (26.5),
+and `a28564b4529b76cc02832075bdfbc2bace86119e6f4f2a81762e5014507b3b2e` (26.6).
 
 | Output | Size | SHA-256 |
 | --- | ---: | --- |

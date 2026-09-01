@@ -9,9 +9,9 @@ Source integration for the T8020 Apple TV jailbreak boot chain.
 | Hardware | Apple TV 4K (2nd generation) |
 | Product | AppleTV11,1 (`j305ap`) |
 | SoC | T8020 (A12) |
-| tvOS device-tested | 26.5 (`23L471`) |
-| tvOS KPF static-tested | 26.3, 26.5 |
-| XNU | `xnu-12377.123.3~2/RELEASE_ARM64_T8020` |
+| tvOS device-tested | 26.5 (`23L471`), 26.6 (`23L772`) |
+| tvOS KPF static-tested | 26.3, 26.5, 26.6 |
+| XNU | `xnu-12377.163.4~3/RELEASE_ARM64_T8020` |
 
 ## Components
 
@@ -77,10 +77,11 @@ components/jbinit/src/
 ## Prepare the iBSS input
 
 The yoloDFU patcher accepts the decrypted Apple TV 4K (2nd generation) iBSS
-from tvOS 26.5, `mBoot-18000.120.36`. Its SHA-256 must be:
+from tvOS 26.5 or 26.6. Accepted SHA-256 values:
 
 ```text
-c8d4aebc681d38a8925f3b86d0fa54cac23c39d525e53f088fd21c8045dc8f4d
+c8d4aebc681d38a8925f3b86d0fa54cac23c39d525e53f088fd21c8045dc8f4d  (26.5, mBoot-18000.120.36)
+44b8df7038b23b1bda0e7d47a295c9e0cfdbf5c4aa414405d4f30855a6fbc0e8  (26.6, mBoot-18000.120.40)
 ```
 
 Verify the input before building:
@@ -89,8 +90,8 @@ Verify the input before building:
 shasum -a 256 /path/to/decrypted-ibss.bin
 ```
 
-Use this same tested iBSS when booting devices installed with tvOS 26.3 or
-26.5. The patcher deliberately rejects a different iBSS hash.
+Use either tested iBSS when booting devices on tvOS 26.3, 26.5, or 26.6.
+The patcher rejects any iBSS not in the accepted set.
 
 ## Build the boot artifacts
 
