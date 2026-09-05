@@ -12,7 +12,6 @@ KPF="${KPF:-$ROOT/artifacts/checkra1n-kpf-pongo}"
 RAMDISK="${RAMDISK:-$ROOT/artifacts/ramdisk.dmg}"
 BINPACK="${BINPACK:-$ROOT/artifacts/binpack.dmg}"
 
-USBLITER8CTL="$ROOT/components/usbliter8/usbliter8ctl"
 SEND_PONGO="$ROOT/components/yolodfu/tools/send_pongo.py"
 PONGOTERM="$ROOT/components/PongoOS/scripts/pongoterm"
 
@@ -39,7 +38,7 @@ need_cmd irecovery
 need_cmd make
 need_cmd "$PYTHON"
 for file in "$IBSS" "$PONGO_CONTAINER" "$KPF" "$RAMDISK" "$BINPACK" \
-            "$USBLITER8CTL" "$SEND_PONGO"; do
+            "$SEND_PONGO"; do
     need_file "$file"
 done
 
@@ -55,19 +54,51 @@ if [[ ! -x "$PONGOTERM" ]]; then
 fi
 
 echo '[1/4] Booting patched iBSS'
-"$PYTHON" "$USBLITER8CTL" boot "$IBSS"
+"$PYTHON" - "$IBSS" << 'PYEOF'
+import sys, usb.core
+DFU_DNLOAD, DFU_ABORT, CUSTOM_BOOT = 1, 4, 8
+
+with open(sys.argv[1], "rb") as f:
+    data = f.read()
+
+dev = usb.core.find(idProduct=0x1227)
+if not dev:
+    raise SystemExit("no DFU device")
+
+offset = 0
+while offset < len(data):
+    chunk = data[offset:offset + 0x800]
+    dev.ctrl_transfer(0x21, DFU_DNLOAD, 0, 0, chunk, 1000)
+    offset += len(chunk)
+    print(f"\rsent - 0x{offset:x}", end="")
+print()
+dev.ctrl_transfer(0x21, DFU_DNLOAD, 0, 0, None, 100)
+
+try:
+    dev.ctrl_transfer(0x21, CUSTOM_BOOT, 0, 0, None, 100)
+except usb.core.USBError:
+    pass
+
+try:
+    dev.ctrl_transfer(0x21, DFU_ABORT, 0, 0, None, 100)
+except usb.core.USBError:
+    pass
+PYEOF
+
 wait_usb 'YOLO:checkra1n' yoloDFU
+echo '       yoloDFU found'
 
 echo '[2/4] Sending Pongo container'
 "$PYTHON" "$SEND_PONGO" "$PONGO_CONTAINER"
 wait_usb '"USB Product Name" = "PongoOS USB Device"' PongoOS
+echo '       PongoOS found'
 
 echo '[3/4] Loading KPF and jbinit artifacts'
 {
     printf 'fuse lock\n'
-    printf '/send %q\nmodload\npalera1n_flags 0x2\n' "$KPF"
-    printf '/send %q\nramdisk\n' "$RAMDISK"
-    printf '/send %q\noverlay\n' "$BINPACK"
+    printf '/send %s\nmodload\npalera1n_flags 0x2\n' "$KPF"
+    printf '/send %s\nramdisk\n' "$RAMDISK"
+    printf '/send %s\noverlay\n' "$BINPACK"
     if [[ -n "$BOOT_ARGS" ]]; then
         printf 'xargs %s\n' "$BOOT_ARGS"
     else
@@ -89,6 +120,12 @@ while (( SECONDS < deadline )); do
         kill "$term_pid" 2>/dev/null || true
         wait "$term_pid" 2>/dev/null || true
         trap - EXIT
+        echo ''
+        echo '  Apple TV is booting jailbroken tvOS'
+        echo '  palera1n Loader should appear on screen'
+        echo ''
+        echo '  After bootstrap, connect via SSH:'
+        echo '    ssh root@<apple-tv-ip>  (password: alpine)'
         exit 0
     fi
     sleep 1
