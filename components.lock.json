@@ -9,7 +9,7 @@
       "upstream": "https://github.com/prdgmshift/usbliter8.git",
       "base_commit": "afe8b5c8998fce63e76c0b2a88c606c61e2950c7",
       "release_branch": "t8020",
-      "release_commit": "aa90621ec213ed9c9274fc25fcbf1204561b75a4"
+      "release_commit": "3bc69c3a3f8c2bcd30594f5e26a51517ecc764a0"
     },
     {
       "name": "yolodfu",
@@ -19,7 +19,7 @@
       "upstream": null,
       "base_commit": "6ca6e4539a37b3009a18b1d37928eeabd9037c56",
       "release_branch": "t8020",
-      "release_commit": "848eb8ea73e709ece738e0f451322f13173658de"
+      "release_commit": "8525590549a160d31c530ebb2d0d3ae4ba313d1d"
     },
     {
       "name": "PongoOS",
